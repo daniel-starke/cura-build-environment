@@ -69,7 +69,6 @@ GetFromEnvironmentOrCache(
 include(projects/python.cmake)
 include(projects/charon.cmake)
 include(projects/savitar.cmake)
-include(projects/arcus.cmake)
 include(projects/uranium.cmake)
 include(projects/libnest2d.cmake)
 include(projects/pynest2d.cmake)

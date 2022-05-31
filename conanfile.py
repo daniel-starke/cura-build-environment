@@ -28,6 +28,7 @@ class CuraBuildEnvironemtConan(ConanFile):
         self.requires("nlopt/2.7.0")
         self.requires("rapidjson/1.1.0")
         self.requires("stb/20200203")
+        self.requires("arcus/latest@ultimaker/stable")
 
     def generate(self):
         cmake = CMakeDeps(self)
