@@ -39,3 +39,8 @@ add_custom_command(
         TARGET install-python-requirements
         COMMAND ${CMAKE_COMMAND} -E env "PYTHONPATH=${PYTHONPATH}" ${Python_VENV_EXECUTABLE} -m pip install --prefix ${CMAKE_INSTALL_PREFIX} --require-hashes -r  ${CMAKE_SOURCE_DIR}/projects/requirements.txt)
 add_dependencies(install-python-requirements install-base-python-requirements)
+
+# Workaround for not having full Conan support yet
+find_package(arcus REQUIRED)
+file(GLOB pyarcus_files "${arcus_arcus_pyarcus_LIB_DIRS_RELEASE}/*")
+file(COPY ${pyarcus_files} DESTINATION ${Python_SITEARCH})
