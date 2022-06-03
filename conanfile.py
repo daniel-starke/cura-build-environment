@@ -20,6 +20,7 @@ class CuraBuildEnvironemtConan(ConanFile):
     def configure(self):
         self.options["boost"].header_only = True
         self.options["*"].shared = True
+        self.options["arcus"].python_version = "3.10.4"
 
     def build_requirements(self):
         self.tool_requires("protobuf/3.17.1")
@@ -32,7 +33,7 @@ class CuraBuildEnvironemtConan(ConanFile):
         self.requires("nlopt/2.7.0")
         self.requires("rapidjson/1.1.0")
         self.requires("stb/20200203")
-        self.requires("arcus/latest@ultimaker/stable")
+        self.requires("arcus/5.0.1-PullRequest0137.78@ultimaker/stable")
 
     def generate(self):
         cmake = CMakeDeps(self)
