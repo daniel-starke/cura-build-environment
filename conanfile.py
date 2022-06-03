@@ -20,6 +20,9 @@ class CuraBuildEnvironemtConan(ConanFile):
     def configure(self):
         self.options["boost"].header_only = True
 
+    def build_requirements(self):
+        self.tool_requires("protobuf/3.17.1")
+
     def requirements(self):
         self.requires("protobuf/3.17.1")
         self.requires("clipper/6.4.2")
@@ -32,6 +35,9 @@ class CuraBuildEnvironemtConan(ConanFile):
 
     def generate(self):
         cmake = CMakeDeps(self)
+        cmake.build_context_activated = ["protobuf"]
+        cmake.build_context_suffix = {"protobuf": "_BUILD"}
+
         cmake.generate()
 
         tc = CMakeToolchain(self)
