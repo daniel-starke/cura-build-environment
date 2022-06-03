@@ -19,7 +19,7 @@ class CuraBuildEnvironemtConan(ConanFile):
 
     def configure(self):
         self.options["boost"].header_only = True
-        self.options["*"].shared = True
+        self.options["arcus"].shared = True
 
     def build_requirements(self):
         self.tool_requires("protobuf/3.17.1")
