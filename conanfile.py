@@ -33,7 +33,7 @@ class CuraBuildEnvironemtConan(ConanFile):
         self.requires("nlopt/2.7.0")
         self.requires("rapidjson/1.1.0")
         self.requires("stb/20200203")
-        self.requires("arcus/5.0.1-PullRequest0137.78@ultimaker/stable")
+        self.requires("arcus/5.0.1-PullRequest0137.78@ultimaker/testing")
 
     def generate(self):
         cmake = CMakeDeps(self)
