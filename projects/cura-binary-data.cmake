@@ -5,7 +5,7 @@ GetFromEnvironmentOrCache(
         NAME
             CURABINARYDATA_BRANCH_OR_TAG
         DEFAULT
-            master
+            main
         DESCRIPTION
             "The name of the tag or branch to build for cura-binary-data")
 
