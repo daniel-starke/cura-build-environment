@@ -11,10 +11,10 @@ GetFromEnvironmentOrCache(
         DESCRIPTION
             "Specify the minimum version of the target platform (e.g. macOS or iOS)")
 
+cmake_policy(SET CMP0091 NEW)  # For MSVC flags, will be ignored on non-Windows OS's
 project(cura-build-environment)
 cmake_minimum_required(VERSION 3.20)
 
-include(cmake/conan.cmake)
 include(cmake/os.cmake)
 
 include(ExternalProject)
@@ -72,7 +72,6 @@ include(projects/savitar.cmake)
 include(projects/uranium.cmake)
 include(projects/libnest2d.cmake)
 include(projects/pynest2d.cmake)
-include(projects/curaengine.cmake)
 include(projects/cura.cmake)
 include(projects/fdm_materials.cmake)
 include(projects/cura-binary-data.cmake)
