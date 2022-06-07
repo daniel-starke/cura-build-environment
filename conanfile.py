@@ -19,26 +19,16 @@ class CuraBuildEnvironemtConan(ConanFile):
 
     def configure(self):
         self.options["boost"].header_only = True
-        self.options["arcus"].shared = True
-
-    def build_requirements(self):
-        self.tool_requires("protobuf/3.17.1")
+        self.options["*"].shared = True
 
     def requirements(self):
-        self.requires("protobuf/3.17.1")
         self.requires("clipper/6.4.2")
         self.requires("boost/1.78.0")
-        self.requires("gtest/1.8.1")
         self.requires("nlopt/2.7.0")
-        self.requires("rapidjson/1.1.0")
-        self.requires("stb/20200203")
-        self.requires("arcus/5.0.1-PullRequest0137.78@ultimaker/testing")
+        self.requires("curaengine/5.0.1-CURA-9365-fix-building-cura-main.1+58@ultimaker/cura-9365")
 
     def generate(self):
         cmake = CMakeDeps(self)
-        cmake.build_context_activated = ["protobuf"]
-        cmake.build_context_suffix = {"protobuf": "_BUILD"}
-
         cmake.generate()
 
         tc = CMakeToolchain(self)
