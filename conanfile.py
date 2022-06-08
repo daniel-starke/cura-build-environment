@@ -1,11 +1,11 @@
-from pathlib import Path
+import os
+
+from jinja2 import Template
 
 from conan import ConanFile
-from conan.tools.cmake import CMakeToolchain, CMakeDeps, CMake
-
-from conans.errors import ConanInvalidConfiguration
-from conans.tools import Version
-from conan.tools.files import files
+from conan.tools.cmake import CMakeToolchain, CMakeDeps
+from conan.tools.env import VirtualRunEnv
+from conans.errors import ConanException
 
 required_conan_version = ">=1.46.2"
 
@@ -16,6 +16,17 @@ class CuraBuildEnvironemtConan(ConanFile):
     topics = ("conan", "python", "pypi", "pip")
     settings = "os", "compiler", "build_type", "arch"
     build_policy = "missing"
+    generators = "VirtualRunEnv"
+
+    def layout(self):
+        self.folders.source = "."
+        try:
+            build_type = str(self.settings.build_type)
+        except ConanException:
+            raise ConanException("'build_type' setting not defined, it is necessary")
+
+        self.folders.build = f"cmake-build-{build_type.lower()}"
+        self.folders.generators = os.path.join(self.folders.build, "conan")
 
     def configure(self):
         self.options["boost"].header_only = True
@@ -28,6 +39,15 @@ class CuraBuildEnvironemtConan(ConanFile):
         self.requires("curaengine/5.0.1-CURA-9365-fix-building-cura-main.1+58@ultimaker/cura-9365")
 
     def generate(self):
+        with open(os.path.join(self.source_folder, "cmake", "pyinstaller.cmake.jinja"), "r") as f:
+            pyinstaller_cmake = Template(f.read())
+
+        run_env = VirtualRunEnv(self)
+        env = run_env.environment()
+        envvars = env.vars(self, scope = "run")
+        with open(os.path.join(self.source_folder, "cmake", "pyinstaller.cmake"), "w") as f:
+            f.write(pyinstaller_cmake.render(envs = envvars))
+
         cmake = CMakeDeps(self)
         cmake.generate()
 

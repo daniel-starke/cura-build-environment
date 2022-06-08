@@ -54,7 +54,8 @@ add_custom_command(
         WORKING_DIRECTORY
             ${installer_DIR}
         COMMAND
-            ${CMAKE_COMMAND} -E env "PYTHONPATH=${PYTHONPATH}" ${pyinstaller_EXECUTABLE} ${cura_EXECUTABLE}
+            {% for env_var, env_value in envs.items() %}${CMAKE_COMMAND} -E env "{{ env_var }}={{ env_value | replace("\\", "/") }}"
+            {% endfor %}${pyinstaller_EXECUTABLE} ${cura_EXECUTABLE}
                 --collect-all cura
                 --collect-all UM
                 --collect-all serial #Used only in plug-ins.
@@ -78,4 +79,4 @@ add_custom_command(
         COMMAND
             ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/packaging/Cura.ico ${ULTIMAKER_CURA_PATH}/
 )
-add_dependencies(pyinstaller create_installer_dir Cura fdm_materials cura-binary-data)
+#add_dependencies(pyinstaller create_installer_dir Cura fdm_materials cura-binary-data)
