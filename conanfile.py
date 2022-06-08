@@ -46,7 +46,7 @@ class CuraBuildEnvironemtConan(ConanFile):
         env = run_env.environment()
         envvars = env.vars(self, scope = "run")
         with open(os.path.join(self.source_folder, "cmake", "pyinstaller.cmake"), "w") as f:
-            f.write(pyinstaller_cmake.render(envs = envvars))
+            f.write(pyinstaller_cmake.render(envs = envvars, curaengine_bindir = self.deps_cpp_info["curaengine"].bindirs[0]))
 
         cmake = CMakeDeps(self)
         cmake.generate()
