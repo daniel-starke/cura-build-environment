@@ -19,4 +19,3 @@ ExternalProject_Add(Charon
                -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
                -DPython_ROOT=${Python_ROOT}
                -DPython_SITELIB_LOCAL=${Python_SITELIB_LOCAL})
-add_dependencies(Charon install-python-requirements)

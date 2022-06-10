@@ -26,4 +26,3 @@ ExternalProject_Add(Uranium
                -DPython_ROOT=${Python_ROOT}
                -DPython_SITELIB_LOCAL=${Python_SITELIB_LOCAL}
                -DUM_NO_INSTALL_PLUGINS=${CURA_NO_INSTALL_PLUGINS})
-add_dependencies(Uranium install-python-requirements)
