@@ -33,46 +33,16 @@ on:
         required: true
         default: false
         type: boolean
-      cloud_api_root:
-        description: 'Root url of the Cloud api'
+      staging:
+        description: 'Use staging API'
         required: true
-        default: 'https://api.ultimaker.com'
-        type: choice
-        options:
-          - 'https://api.ultimaker.com'
-          - 'https://api-staging.ultimaker.com'
-      cloud_api_version:
-        description: 'version of the Cloud API'
-        required: true
-        default: '1'
-      account_api_root:
-        description: 'API endpoint for Account services'
-        required: true
-        default: 'https://account.ultimaker.com'
-        type: choice
-        options:
-          - 'https://account.ultimaker.com'
-          - 'https://account-staging.ultimaker.com'
-      marketplace_api_root:
-        description: 'API endpoint for Marketplace services'
-        required: true
-        default: 'https://marketplace.ultimaker.com'
-        type: choice
-        options:
-          - 'https://marketplace.ultimaker.com'
-          - 'https://marketplace-staging.ultimaker.com'
-      digital_factory_api_root:
-        description: 'API endpoint for Digital Factory services'
-        required: true
-        default: 'https://digitalfactory.ultimaker.com'
-        type: choice
-        options:
-          - 'https://digitalfactory.ultimaker.com'
-          - 'https://digitalfactory-staging.ultimaker.com'
+        default: false
+        type: boolean
       no_install_lugins:
         description: 'FDMMaterials branch to base the installer on'
-        required: true
-        default: 'origin/CURA-9365_fix_building_cura_main'
+        required: false
+        default: ''
+
 env:
   CONAN_USER: ${{ secrets.CONAN_USER }}
   CONAN_PASS: ${{ secrets.CONAN_PASS }}
@@ -145,8 +115,8 @@ jobs:
       CURA_VERSION_BUILD: ${{ needs.get-semver.outputs.semver_build }}
 
     steps:
-      -   name: Checkout cura-build-environment
-          uses: actions/checkout@v3
+      - name: Checkout cura-build-environment
+        uses: actions/checkout@v3
 
       - name: Setup Python and pip
         uses: actions/setup-python@v3
@@ -154,6 +124,24 @@ jobs:
           python-version: '3.10.4'
           architecture: 'x64'
           cache: 'pip'
+
+      - name: Cloud urls
+        if ${{ !inputs.staging }}
+        run: |
+          echo "CLOUD_API_ROOT=https://api.ultimaker.com" >> $GITHUB_ENV
+          echo "CLOUD_API_VERSION=1" >> $GITHUB_ENV
+          echo "ACCOUNT_API_ROOT=https://account.ultimaker.com" >> $GITHUB_ENV
+          echo "MARKETPLACE_API_ROOT=https://marketplace.ultimaker.com" >> $GITHUB_ENV
+          echo "DIGITAL_FACTORY_API_ROOT=https://digitalfactory.ultimaker.com" >> $GITHUB_ENV
+
+      - name: Cloud urls staging
+        if ${{ inputs.staging }}
+        run: |
+          echo "CLOUD_API_ROOT=https://api-staging.ultimaker.com" >> $GITHUB_ENV
+          echo "CLOUD_API_VERSION=1" >> $GITHUB_ENV
+          echo "ACCOUNT_API_ROOT=https://account-staging.ultimaker.com" >> $GITHUB_ENV
+          echo "MARKETPLACE_API_ROOT=https://marketplace-staging.ultimaker.com" >> $GITHUB_ENV
+          echo "DIGITAL_FACTORY_API_ROOT=https://digitalfactory-staging.ultimaker.com" >> $GITHUB_ENV
 
       - name: Prepare Conan and sip-build (Bash)
         if: ${{ runner.os != 'Windows' }}
