@@ -17,6 +17,7 @@ class CuraBuildEnvironemtConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     build_policy = "missing"
     generators = "VirtualRunEnv"
+    short_paths = True
 
     def layout(self):
         self.folders.source = "."
