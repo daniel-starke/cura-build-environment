@@ -72,4 +72,4 @@ ExternalProject_Add(Cura
                -DCURA_DIGITAL_FACTORY_URL=${CURA_DIGITAL_FACTORY_URL}
                -DCURA_MARKETPLACE_ROOT=${CURA_MARKETPLACE_ROOT}
                -DCURA_NO_INSTALL_PLUGINS=${CURA_NO_INSTALL_PLUGINS})
-add_dependencies(Cura install-python-requirements Savitar Uranium pynest2d Charon)
+add_dependencies(Cura install-python-requirements Uranium Charon)

@@ -33,10 +33,10 @@ class CuraBuildEnvironemtConan(ConanFile):
         self.options["*"].shared = True
 
     def requirements(self):
-        self.requires("clipper/6.4.2")
-        self.requires("boost/1.78.0")
-        self.requires("nlopt/2.7.0")
-        self.requires("curaengine/5.0.1-CURA-9365-fix-building-cura-main.1+58@ultimaker/cura-9365")
+        self.requires("pynest2d/latest@ultimaker/cura-9365")
+        self.requires("savitar/latest@ultimaker/cura-9365")
+        self.requires("arcus/latest@ultimaker/cura-9365")
+        self.requires("curaengine/latest@ultimaker/cura-9365")
 
     def generate(self):
         with open(os.path.join(self.source_folder, "cmake", "pyinstaller.cmake.jinja"), "r") as f:
