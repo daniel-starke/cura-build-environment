@@ -126,7 +126,7 @@ jobs:
           cache: 'pip'
 
       - name: Cloud urls
-        if ${{ !inputs.staging }}
+        if: ${{ !inputs.staging }}
         run: |
           echo "CLOUD_API_ROOT=https://api.ultimaker.com" >> $GITHUB_ENV
           echo "CLOUD_API_VERSION=1" >> $GITHUB_ENV
@@ -135,7 +135,7 @@ jobs:
           echo "DIGITAL_FACTORY_API_ROOT=https://digitalfactory.ultimaker.com" >> $GITHUB_ENV
 
       - name: Cloud urls staging
-        if ${{ inputs.staging }}
+        if: ${{ inputs.staging }}
         run: |
           echo "CLOUD_API_ROOT=https://api-staging.ultimaker.com" >> $GITHUB_ENV
           echo "CLOUD_API_VERSION=1" >> $GITHUB_ENV
