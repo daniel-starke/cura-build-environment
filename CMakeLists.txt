@@ -66,7 +66,6 @@ GetFromEnvironmentOrCache(
             "Cura Extra Version Information"
         REQUIRED)
 
-include(projects/python.cmake)
 include(projects/charon.cmake)
 include(projects/uranium.cmake)
 include(projects/cura.cmake)
