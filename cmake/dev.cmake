@@ -2,4 +2,4 @@
 # Cura's build system is released under the terms of the AGPLv3 or higher.
 
 add_custom_target(create-dev-env COMMENT "Create development virtual environment")
-add_dependencies(create-dev-env install-python-requirements fdm_materials Charon)
+add_dependencies(create-dev-env fdm_materials Charon)
