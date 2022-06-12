@@ -123,7 +123,7 @@ jobs:
                 conan source .
                 
                 cd cura
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=$CURA_STAGING -o cura:enterprise=$CURA_ENTERPRISE --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
+                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${CURA_STAGING^} -o cura:enterprise=${CURA_ENTERPRISE^} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 chmod +x venv/conan/activate_github_actions_buildenv.sh
                 chmod +x venv/conan/activate_github_actions_runenv.sh
                 chmod +x venv/bin/activate_github_actions_env.sh
@@ -144,7 +144,7 @@ jobs:
                 conan source .
                 
                 cd cura
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=$Env:CURA_STAGING -o cura:enterprise=$Env:CURA_ENTERPRISE --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
+                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=( Get-Culture ).TextInfo.ToTitleCase( $Env:CURA_STAGING.ToLower() ) -o cura:enterprise=( Get-Culture ).TextInfo.ToTitleCase( $Env:CURA_ENTERPRISE.ToLower() ) --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 .\venv\conan\activate_github_actions_buildenv.ps1
                 .\venv\Scripts\activate_github_actions_env.ps1
 
