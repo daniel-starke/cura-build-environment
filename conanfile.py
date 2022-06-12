@@ -52,11 +52,7 @@ class CuraBuildEnvironemtConan(ConanFile):
             if should_clone:
                 git.checkout(git_src["branch"])
             else:
-                if username and password:
-                    url = git.get_url_with_credentials(git_src["url"])
-                else:
-                    url = git_src["url"]
-                git.clone(url = url, branch = git_src["branch"], shallow = True)
+                git.clone(url = git_src["url"], branch = git_src["branch"], shallow = True)
 
     def generate(self):
         pass
