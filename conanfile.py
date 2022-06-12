@@ -52,23 +52,4 @@ class CuraBuildEnvironemtConan(ConanFile):
                 git.clone(url = url, branch = git_src["branch"], shallow = True)
 
     def generate(self):
-        with open(os.path.join(self.source_folder, "cmake", "pyinstaller.cmake.jinja"), "r") as f:
-            pyinstaller_cmake = Template(f.read())
-
-        run_env = VirtualRunEnv(self)
-        env = run_env.environment()
-        envvars = env.vars(self, scope = "run")
-        with open(os.path.join(self.source_folder, "cmake", "pyinstaller.cmake"), "w") as f:
-            f.write(pyinstaller_cmake.render(envs = envvars, curaengine_bindir = self.deps_cpp_info["curaengine"].bindirs[0]))
-
-        cmake = CMakeDeps(self)
-        cmake.generate()
-
-        tc = CMakeToolchain(self)
-
-        # Don't use Visual Studio as the CMAKE_GENERATOR
-        if self.settings.compiler == "Visual Studio":
-            tc.blocks["generic_system"].values["generator_platform"] = None
-            tc.blocks["generic_system"].values["toolset"] = None
-
-        tc.generate()
+        pass
