@@ -27,8 +27,6 @@ env:
     CODESIGN_IDENTITY: ${{ secrets.CODESIGN_IDENTITY }}
     NOTARIZE_USER: ${{ secrets.NOTARIZE_USER }}
     NOTARIZE_PASSWORD: ${{ secrets.NOTARIZE_PASSWORD }}
-    CURA_STAGING: ${{ github.event.inputs.staging == 'true' }}
-    CURA_ENTERPRISE: ${{ github.event.inputs.enterprise == 'true' }}
 
 jobs:
     get-semver:
@@ -114,7 +112,11 @@ jobs:
             run: |
                 # FIXME: Once Cura is also a full package
                 echo "CURA_VERSION={{ needs.get-semver.outputs.semver_full }}" >> $GITHUB_ENV
+                echo CURA_STAGING=$(echo ${{ github.event.inputs.staging }} | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}') >> $GITHUB_ENV
+                echo CURA_ENTERPRISE=$(echo ${{ github.event.inputs.enterprise }} | awk '{print toupper(substr($0,0,1))tolower(substr($0,2))}') >> $GITHUB_ENV
                 echo $CURA_VERSION
+                echo $CURA_STAGING
+                echo $CURA_ENTERPRISE
                 
                 conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf $HOME/.conan
                 conan profile new default --detect
@@ -123,7 +125,7 @@ jobs:
                 conan source .
                 
                 cd cura
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${CURA_STAGING^} -o cura:enterprise=${CURA_ENTERPRISE^} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
+                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=$CURA_STAGING -o cura:enterprise=$CURA_ENTERPRISE --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 chmod +x venv/conan/activate_github_actions_buildenv.sh
                 chmod +x venv/conan/activate_github_actions_runenv.sh
                 chmod +x venv/bin/activate_github_actions_env.sh
@@ -134,8 +136,12 @@ jobs:
             if: ${{ runner.os == 'Windows' }}
             run: |
                 # FIXME: Once Cura is also a full package
-                echo "CURA_VERSION={{ needs.get-semver.outputs.semver_full }}" >> $Env:GITHUB_ENV
+                echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $Env:GITHUB_ENV
+                echo CURA_STAGING=( Get-Culture ).TextInfo.ToTitleCase( '${{ github.event.inputs.staging }}'.ToLower() ) >> $Env:GITHUB_ENV
+                echo CURA_ENTERPRISE=( Get-Culture ).TextInfo.ToTitleCase( '${{ github.event.inputs.enterprise }}'.ToLower() ) >> $Env:GITHUB_ENV
                 echo $Env:CURA_VERSION
+                echo $Env:CURA_STAGING
+                echo $Env:CURA_ENTERPRISE
                 
                 conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf C:\Users\runneradmin\.conan
                 conan profile new default --detect
@@ -144,7 +150,7 @@ jobs:
                 conan source .
                 
                 cd cura
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=( Get-Culture ).TextInfo.ToTitleCase( $Env:CURA_STAGING.ToLower() ) -o cura:enterprise=( Get-Culture ).TextInfo.ToTitleCase( $Env:CURA_ENTERPRISE.ToLower() ) --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
+                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=$Env:CURA_STAGING -o cura:enterprise=$Env:CURA_ENTERPRISE --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 .\venv\conan\activate_github_actions_buildenv.ps1
                 .\venv\Scripts\activate_github_actions_env.ps1
 
