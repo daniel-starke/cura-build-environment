@@ -21,6 +21,13 @@ class CuraBuildEnvironemtConan(ConanFile):
     generators = "VirtualRunEnv"
     short_paths = True
 
+    def set_version(self):
+        if not self.version:
+            if "CURA_VERSION" in os.environ:
+                self.version = os.environ["CURA_VERSION"]
+            else:
+                self.version = "main"
+
     def layout(self):
         self.folders.source = "."
         try:
