@@ -128,7 +128,9 @@ jobs:
                 ./venv/conan/activate_github_actions_buildenv.sh
                 ./venv/bin/activate_github_actions_env.sh
                 
-                pyinstaller Ultimaker-Cura.spec
+                echo "PATH=$PATH"
+                echo "PYTHONPATH=$PYTHONPATH"
+                ./venv/bin/pyinstaller Ultimaker-Cura.spec
                 
                 # Create an archive of the dist
                 tar -czvf dist/Ultimaker-Cura-$Env:CURA_VERSION.tar.gz dist/Ultimaker-Cura
