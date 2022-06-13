@@ -152,6 +152,8 @@ jobs:
             run: |                
                 echo "PATH=$PATH"
                 echo "PYTHONPATH=$PYTHONPATH"
+                
+                cd cura
                 ./venv/bin/pyinstaller Ultimaker-Cura.spec
                 
                 # Create an archive of the dist
@@ -162,8 +164,9 @@ jobs:
             run: |
                 echo "PATH=$Env:PATH"
                 echo "PYTHONPATH=$Env:PYTHONPATH"
-
-                pyinstaller Ultimaker-Cura.spec
+                
+                cd cura
+                .\venv\Scripts\pyinstaller Ultimaker-Cura.spec
                 
                 # Create an archive of the dist
                 Compress-Archive -Path dist\Ultimaker-Cura -DestinationPath dist\Ultimaker-Cura-$Env:CURA_VERSION.zip
