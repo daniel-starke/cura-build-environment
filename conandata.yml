@@ -1,4 +1,31 @@
-"main":
+"dev":
+  git:
+    cura:
+      url: "https://github.com/Ultimaker/cura.git"
+      branch: "CURA-9365_fix_building_cura_main"
+      directory: "cura"
+      private: False
+    uranium:
+      url: "https://github.com/Ultimaker/uranium.git"
+      branch: "CURA-9365_fix_building_cura_main"
+      directory: "uranium"
+      private: False
+    fdm_materials:
+      url: "https://github.com/Ultimaker/fdm_materials.git"
+      branch: "CURA-9365_fix_building_cura_main"
+      directory: "fdm_materials"
+      private: False
+    cura_binary_data:
+      url: "https://github.com/ultimaker/cura-binary-data.git"
+      branch: "CURA-9365_fix_building_cura_main"
+      directory: "cura_binary_data"
+      private: False
+    charon:
+      url: "https://github.com/ultimaker/libcharon.git"
+      branch: "CURA-9365_fix_building_cura_main"
+      directory: "charon"
+      private: False
+"5.1.0-CURA-9365":
   git:
     cura:
       url: "https://github.com/Ultimaker/cura.git"
