@@ -111,7 +111,7 @@ jobs:
             if: ${{ runner.os != 'Windows' }}
             run: |
                 # FIXME: Once Cura is also a full package
-                echo "CURA_VERSION={{ needs.get-semver.outputs.semver_full }}" >> $GITHUB_ENV
+                echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $GITHUB_ENV
                 echo $CURA_VERSION
                 
                 conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf $HOME/.conan
@@ -129,6 +129,9 @@ jobs:
                 ./venv/bin/activate_github_actions_env.sh
                 
                 pyinstaller Ultimaker-Cura.spec
+                
+                # Create an archive of the dist
+                tar -czvf dist/Ultimaker-Cura-$Env:CURA_VERSION.tar.gz dist/Ultimaker-Cura
 
         -   name: Prepare Conan (Powershell)
             if: ${{ runner.os == 'Windows' }}
@@ -149,6 +152,9 @@ jobs:
                 .\venv\Scripts\activate_github_actions_env.ps1
                 
                 pyinstaller Ultimaker-Cura.spec
+                
+                # Create an archive of the dist
+                Compress-Archive -Path dist\Ultimaker-Cura -DestinationPath dist\Ultimaker-Cura-$Env:CURA_VERSION.zip
 
         -   name: Upload the Package(s)
             run: conan upload "*" -r ultimaker --all -c
@@ -161,4 +167,6 @@ jobs:
                     install/dist/*.exe
                     install/dist/*.Appimage
                     install/dist/*.dmg
+                    install/dist/*.zip
+                    install/dist/*.tar.gz
                     retention-days: 2
