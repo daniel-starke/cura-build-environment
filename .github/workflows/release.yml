@@ -107,11 +107,17 @@ jobs:
                     C:\.conan
                 key: ${{ runner.os }}-conan
 
+        -   name: Set Cura version (Bash)
+            if: ${{ runner.os != 'Windows' }}
+            run: echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $GITHUB_ENV
+
+        -   name: Set Cura version (Powershell)
+            if: ${{ runner.os == 'Windows' }}
+            run: echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $Env:GITHUB_ENV
+
         -   name: Prepare Conan (Bash)
             if: ${{ runner.os != 'Windows' }}
             run: |
-                # FIXME: Once Cura is also a full package
-                echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $GITHUB_ENV
                 echo $CURA_VERSION
                 
                 conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf $HOME/.conan
@@ -127,19 +133,10 @@ jobs:
                 chmod +x venv/bin/activate_github_actions_env.sh
                 . venv/conan/activate_github_actions_buildenv.sh
                 . venv/bin/activate_github_actions_env.sh
-                
-                echo "PATH=$PATH"
-                echo "PYTHONPATH=$PYTHONPATH"
-                ./venv/bin/pyinstaller Ultimaker-Cura.spec
-                
-                # Create an archive of the dist
-                tar -czvf dist/Ultimaker-Cura-$Env:CURA_VERSION.tar.gz dist/Ultimaker-Cura
 
         -   name: Prepare Conan (Powershell)
             if: ${{ runner.os == 'Windows' }}
             run: |
-                # FIXME: Once Cura is also a full package
-                echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $Env:GITHUB_ENV
                 echo $Env:CURA_VERSION
                 
                 conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf C:\Users\runneradmin\.conan
@@ -152,7 +149,23 @@ jobs:
                 conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${{ github.event.inputs.staging }} -o cura:enterprise=${{ github.event.inputs.enterprise }} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 .\venv\conan\activate_github_actions_buildenv.ps1
                 .\venv\Scripts\activate_github_actions_env.ps1
+
+        -   name: Create the Cura dist Conan (Bash)
+            if: ${{ runner.os != 'Windows' }}
+            run: |                
+                echo "PATH=$PATH"
+                echo "PYTHONPATH=$PYTHONPATH"
+                ./venv/bin/pyinstaller Ultimaker-Cura.spec
                 
+                # Create an archive of the dist
+                tar -czvf dist/Ultimaker-Cura-$CURA_VERSION.tar.gz dist/Ultimaker-Cura
+
+        -   name: Create the Cura dist Conan (Powershell)
+            if: ${{ runner.os == 'Windows' }}
+            run: |
+                echo "PATH=$Env:PATH"
+                echo "PYTHONPATH=$Env:PYTHONPATH"
+
                 pyinstaller Ultimaker-Cura.spec
                 
                 # Create an archive of the dist
