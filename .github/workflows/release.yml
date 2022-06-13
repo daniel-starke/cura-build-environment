@@ -114,7 +114,7 @@ jobs:
 
         -   name: Prepare System packages (Linux)
             if: ${{ runner.os == 'Linux' }}
-            run: sudo apt-get install -y libegl-dev
+            run: sudo apt-get install -y libegl-dev libxcb-randr0-dev libxcb-xtest0-dev libxcb-xinerama0-dev libxcb-shape0-dev libxcb-xkb-dev
 
         -   name: Prepare Conan (Bash)
             if: ${{ runner.os != 'Windows' }}
