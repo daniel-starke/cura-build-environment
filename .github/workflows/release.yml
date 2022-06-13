@@ -154,6 +154,7 @@ jobs:
                 echo "PYTHONPATH=$PYTHONPATH"
                 
                 cd cura
+                . venv/bin/activate
                 ./venv/bin/pyinstaller Ultimaker-Cura.spec
                 
                 # Create an archive of the dist
@@ -166,10 +167,11 @@ jobs:
                 echo "PYTHONPATH=$Env:PYTHONPATH"
                 
                 cd cura
+                .\venv\Scripts\Activate.ps1
                 .\venv\Scripts\pyinstaller Ultimaker-Cura.spec
                 
                 # Create an archive of the dist
-                Compress-Archive -Path dist\Ultimaker-Cura -DestinationPath dist\Ultimaker-Cura-$Env:CURA_VERSION.zip
+                Compress-Archive -Path .\dist\Ultimaker-Cura\ -DestinationPath .\dist\Ultimaker-Cura-$Env:CURA_VERSION.zip
 
         -   name: Upload the Package(s)
             run: conan upload "*" -r ultimaker --all -c
