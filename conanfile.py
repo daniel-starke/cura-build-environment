@@ -53,7 +53,7 @@ class CuraBuildEnvironemtConan(ConanFile):
     def source(self):
         username = os.environ.get("GIT_USERNAME", None)
         password = os.environ.get("GIT_PASSWORD", None)
-        for git_src in self.conan_data[self.version]["git"].values():
+        for git_src in self.conan_data[self.conandata_version]["git"].values():
             folder = Path(self.source_folder, git_src["directory"])
             should_clone = folder.exists()
             git = tools.Git(folder = folder, username = username, password = password)
