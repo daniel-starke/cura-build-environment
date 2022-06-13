@@ -75,6 +75,9 @@ jobs:
             matrix:
                 os: [ macos-10.15, windows-2022, ubuntu-20.04 ]
 
+        env:
+            CURA_VERSION: ${{ needs.get-semver.outputs.semver_full }}
+
         steps:
         -   name: Checkout cura-build-environment
             uses: actions/checkout@v3
@@ -106,14 +109,6 @@ jobs:
                     C:\Users\runneradmin\.conan\data
                     C:\.conan
                 key: ${{ runner.os }}-conan
-
-        -   name: Set Cura version (Bash)
-            if: ${{ runner.os != 'Windows' }}
-            run: echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $GITHUB_ENV
-
-        -   name: Set Cura version (Powershell)
-            if: ${{ runner.os == 'Windows' }}
-            run: echo "CURA_VERSION=${{ needs.get-semver.outputs.semver_full }}" >> $Env:GITHUB_ENV
 
         -   name: Prepare Conan (Bash)
             if: ${{ runner.os != 'Windows' }}
