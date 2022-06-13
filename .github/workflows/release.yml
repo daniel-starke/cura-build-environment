@@ -63,7 +63,9 @@ jobs:
 
         -   name: Get short PreReleaseTag
             id: prereleasetag
-            run: echo "::set-output name=PreReleaseTag::${${{ steps.git-tool.outputs.PreReleaseTag }}:0:9}"
+            run: |
+                pre_release_tag=${{ steps.git-tool.outputs.PreReleaseTag }}
+                echo "::set-output name=PreReleaseTag::${pre_release_tag:0:9}"
 
     cura-installer-create:
         runs-on: ${{ matrix.os }}
