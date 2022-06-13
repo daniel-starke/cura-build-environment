@@ -166,9 +166,9 @@ jobs:
             with:
                 name: installer
                 path: |
-                    install/dist/*.exe
-                    install/dist/*.Appimage
-                    install/dist/*.dmg
-                    install/dist/*.zip
-                    install/dist/*.tar.gz
+                    cura/dist/*.exe
+                    cura/dist/*.Appimage
+                    cura/dist/*.dmg
+                    cura/dist/*.zip
+                    cura/dist/*.tar.gz
                     retention-days: 2
