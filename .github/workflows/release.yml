@@ -34,7 +34,7 @@ jobs:
         runs-on: ubuntu-20.04
 
         outputs:
-            semver_full: ${{ steps.git-tool.outputs.Major }}.${{ steps.git-tool.outputs.Minor }}.${{ steps.git-tool.outputs.Patch }}-${{ steps.prereleasetag.outputs.PreReleaseTag }}.${{ steps.date.outputs.BuildMetaData }}
+            semver_full: ${{ steps.git-tool.outputs.Major }}.${{ steps.git-tool.outputs.Minor }}.${{ steps.git-tool.outputs.Patch }}-${{ steps.prereleasetag.outputs.PreReleaseTag }}+${{ steps.date.outputs.BuildMetaData }}
             semver_major: ${{ steps.git-tool.outputs.Major }}
             semver_minor: ${{ steps.git-tool.outputs.Minor }}
             semver_patch: ${{ steps.git-tool.outputs.Patch }}
