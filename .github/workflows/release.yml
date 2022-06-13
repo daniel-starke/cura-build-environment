@@ -127,6 +127,8 @@ jobs:
                 chmod +x venv/bin/activate_github_actions_env.sh
                 ./venv/conan/activate_github_actions_buildenv.sh
                 ./venv/bin/activate_github_actions_env.sh
+                
+                pyinstaller Ultimaker-Cura.spec
 
         -   name: Prepare Conan (Powershell)
             if: ${{ runner.os == 'Windows' }}
@@ -145,6 +147,8 @@ jobs:
                 conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${{ github.event.inputs.staging }} -o cura:enterprise=${{ github.event.inputs.enterprise }} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 .\venv\conan\activate_github_actions_buildenv.ps1
                 .\venv\Scripts\activate_github_actions_env.ps1
+                
+                pyinstaller Ultimaker-Cura.spec
 
         -   name: Upload the Package(s)
             run: conan upload "*" -r ultimaker --all -c
