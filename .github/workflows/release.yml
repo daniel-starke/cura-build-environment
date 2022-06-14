@@ -135,7 +135,10 @@ jobs:
             # TODO: check minimum number of packages required
         -   name: Prepare System packages (Linux)
             if: ${{ runner.os == 'Linux' }}
-            run: sudo apt-get install -y libxml2-dev libxmlsec1-dev libgl1-mesa-dev libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev libxcomposite-dev libxcursor-dev libxdamage-dev libxdmcp-dev libxext-dev libxfixes-dev libxft-dev libxi-dev libxinerama-dev libxkbfile-dev libxmu-dev libxmuu-dev libxpm-dev libxrandr-dev libxrender-dev libxres-dev libxss-dev libxt-dev libxtst-dev libxv-dev libxvmc-dev libxxf86vm-dev xtrans-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev ninja-build patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libwayland-cursor0 libwayland-client0 libwayland-egl1
+            run: |
+                sudo apt-get install -y libxml2-dev libxmlsec1-dev libgl1-mesa-dev libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev libxcomposite-dev libxcursor-dev libxdamage-dev libxdmcp-dev libxext-dev libxfixes-dev libxft-dev libxi-dev libxinerama-dev libxkbfile-dev libxmu-dev libxmuu-dev libxpm-dev libxrandr-dev libxrender-dev libxres-dev libxss-dev libxt-dev libxtst-dev libxv-dev libxvmc-dev libxxf86vm-dev xtrans-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev ninja-build patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libwayland-cursor0 libwayland-client0 libwayland-egl1
+                wget --no-check-certificate --quiet https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O $GITHUB_WORKSPACE/appimagetool
+                chmod +x $GITHUB_WORKSPACE/appimagetool
 
         -   name: Prepare Conan
             run: |
@@ -223,7 +226,7 @@ jobs:
                 cp "$GITHUB_WORKSPACE/packaging/AppRun" Ultimaker-Cura/
                 chmod 750 Ultimaker-Cura/AppRun
                 
-                appimagetool --appimage-extract-and-run Ultimaker-Cura/ "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.AppImage"
+                $GITHUB_WORKSPACE/appimagetool --appimage-extract-and-run Ultimaker-Cura/ "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.AppImage"
             working-directory: cmake-build-release/cura/dist
 
         -   name: Create the MacOS dmg (bash)
