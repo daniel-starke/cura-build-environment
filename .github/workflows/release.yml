@@ -127,7 +127,7 @@ jobs:
             run: conan user -p $CONAN_PASS -r ultimaker $CONAN_USER
 
         -   name: Set the JFrog Artifactory user (Powershell)
-            if: ${{ runner.os != 'Windows' }}
+            if: ${{ runner.os == 'Windows' }}
             run: conan user -p $Env:CONAN_PASS -r ultimaker $Env:CONAN_USER
 
         -   name: Prepare cura-build-environment
@@ -162,7 +162,7 @@ jobs:
                 pip install -r requirements-dev.txt
             working-directory: cmake-build-release/cura
 
-        -   name: Create the Cura dist Conan
+        -   name: Create the Cura dist
             run: pyinstaller Ultimaker-Cura.spec
             working-directory: cmake-build-release/cura
 
