@@ -109,3 +109,4 @@ ENV/
 /graph_info.json
 
 cmake/pyinstaller.cmake
+cmake-build-*
