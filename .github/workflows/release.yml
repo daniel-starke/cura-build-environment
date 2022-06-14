@@ -112,82 +112,62 @@ jobs:
                     C:\.conan
                 key: ${{ runner.os }}-conan
 
+            # TODO: check minimum number of packages required
         -   name: Prepare System packages (Linux)
             if: ${{ runner.os == 'Linux' }}
             run: sudo apt-get install -y libxml2-dev libxmlsec1-dev libgl1-mesa-dev libx11-dev libx11-xcb-dev libfontenc-dev libice-dev libsm-dev libxau-dev libxaw7-dev libxcomposite-dev libxcursor-dev libxdamage-dev libxdmcp-dev libxext-dev libxfixes-dev libxft-dev libxi-dev libxinerama-dev libxkbfile-dev libxmu-dev libxmuu-dev libxpm-dev libxrandr-dev libxrender-dev libxres-dev libxss-dev libxt-dev libxtst-dev libxv-dev libxvmc-dev libxxf86vm-dev xtrans-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev xkb-data libxcb-dri3-dev uuid-dev libxcb-util-dev ninja-build patchelf desktop-file-utils libgdk-pixbuf2.0-dev fakeroot strace fuse libwayland-cursor0 libwayland-client0 libwayland-egl1
 
-        -   name: Prepare Conan (Bash)
-            if: ${{ runner.os != 'Windows' }}
-            run: |
-                echo $CURA_VERSION
-                
-                conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf $HOME/.conan
+        -   name: Prepare Conan
+            run: |               
+                conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}"
                 conan profile new default --detect
-                conan user -p $CONAN_PASS -r ultimaker $CONAN_USER
+
+        -   name: Set the JFrog Artifactory user (bash)
+            if: ${{ runner.os != 'Windows' }}
+            run: conan user -p $CONAN_PASS -r ultimaker $CONAN_USER
+
+        -   name: Set the JFrog Artifactory user (Powershell)
+            if: ${{ runner.os != 'Windows' }}
+            run: conan user -p $Env:CONAN_PASS -r ultimaker $Env:CONAN_USER
+
+        -   name: Prepare cura-build-environment
+            run: |
                 conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
                 conan source .
-                
-                cd cura
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${{ github.event.inputs.staging }} -o cura:enterprise=${{ github.event.inputs.enterprise }} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
-                chmod +x venv/conan/activate_github_actions_buildenv.sh
-                chmod +x venv/conan/activate_github_actions_runenv.sh
-                chmod +x venv/bin/activate_github_actions_env.sh
-                . venv/conan/activate_github_actions_buildenv.sh
-                . venv/bin/activate_github_actions_env.sh
 
-        -   name: Prepare Conan (Powershell)
-            if: ${{ runner.os == 'Windows' }}
-            run: |
-                echo $Env:CURA_VERSION
-                
-                conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}" -tf C:\Users\runneradmin\.conan
-                conan profile new default --detect
-                conan user -p $env:CONAN_PASS -r ultimaker $env:CONAN_USER
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
-                conan source .
-                
-                cd cura
-                conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${{ github.event.inputs.staging }} -o cura:enterprise=${{ github.event.inputs.enterprise }} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
-                .\venv\conan\activate_github_actions_buildenv.ps1
-                .\venv\Scripts\activate_github_actions_env.ps1
-
-        -   name: Create the Cura dist Conan (Bash)
-            if: ${{ runner.os != 'Windows' }}
-            run: |                
-                echo "PATH=$PATH"
-                echo "PYTHONPATH=$PYTHONPATH"
-                
-                cd cura
-                . venv/bin/activate
-                ./venv/bin/pyinstaller Ultimaker-Cura.spec
-                
-                # Create an archive of the dist
-                tar -czvf dist/Ultimaker-Cura-$CURA_VERSION.tar.gz dist/Ultimaker-Cura
-
-        -   name: Create the Cura dist Conan (Powershell)
-            if: ${{ runner.os == 'Windows' }}
-            run: |
-                echo "PATH=$Env:PATH"
-                echo "PYTHONPATH=$Env:PYTHONPATH"
-                
-                cd cura
-                .\venv\Scripts\Activate.ps1
-                .\venv\Scripts\pyinstaller Ultimaker-Cura.spec
-                
-                # Create an archive of the dist
-                Compress-Archive -Path .\dist\Ultimaker-Cura\ -DestinationPath .\dist\Ultimaker-Cura-$Env:CURA_VERSION.zip
+        -   name: Prepare Cura
+            run: conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja -o cura:devtools=True -o cura:staging=${{ github.event.inputs.staging }} -o cura:enterprise=${{ github.event.inputs.enterprise }} --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
+            working-directory: cmake-build-release/cura
 
         -   name: Upload the Package(s)
             run: conan upload "*" -r ultimaker --all -c
 
+        -   name: Set Environment variables for Cura (bash)
+            if: ${{ runner.os != 'Windows' }}
+            run: |
+                . activate_github_actions_buildenv.sh
+                . activate_github_actions_runenv.sh
+            working-directory: cmake-build-release/cura/venv/conan
+
+        -   name: Set Environment variables for Cura (Powershell)
+            if: ${{ runner.os == 'Windows' }}
+            run: |
+                .\activate_github_actions_buildenv.ps1
+                .\activate_github_actions_runenv.ps1
+            working-directory: cmake-build-release/cura/venv/conan
+
+        -   name: Install Cura Python requirements
+            run: |
+                pip install -r requirements.txt
+                pip install -r requirements-dev.txt
+            working-directory: cmake-build-release/cura
+
+        -   name: Create the Cura dist Conan
+            run: pyinstaller Ultimaker-Cura.spec
+
         -   name: Archive artifacts
             uses: actions/upload-artifact@v3
             with:
-                name: installer
-                path: |
-                    cura/dist/*.exe
-                    cura/dist/*.Appimage
-                    cura/dist/*.dmg
-                    cura/dist/*.zip
-                    cura/dist/*.tar.gz
-                    retention-days: 2
+                name: Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}
+                path: cura/dist/Ultimaker-Cura/**
+                retention-days: 2
