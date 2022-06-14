@@ -207,8 +207,8 @@ jobs:
         -   name: Create the Windows exe installer (Powershell)
             if: ${{ github.event.inputs.installer == 'true' && runner.os == 'Windows' }}
             run: |
-                Copy-Item "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" -Destination .
-                python "$Env:GITHUB_WORKSPACE\packaging\NSIS\nsis-configurator.py" . "$Env:GITHUB_WORKSPACE\packaging\NSIS\Ultimaker-Cura.nsi.jinja" "Ultimaker Cura" "Ultimaker-Cura.exe" "${{ needs.get-semver.outputs.semver_major }}" "${{ needs.get-semver.outputs.semver_minor }}" "${{ needs.get-semver.outputs.semver_patch }}" "0" "Ultimaker B.V." "https://ultimaker.com" "$Env:GITHUB_WORKSPACE\packaging\cura_license.txt" "LZMA" "$Env:GITHUB_WORKSPACE\packaging\cura_banner_nsis.bmp" "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.exe"
+                Copy-Item "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" -Destination .\Ultimaker-Cura\
+                python "$Env:GITHUB_WORKSPACE\packaging\NSIS\nsis-configurator.py" .\Ultimaker-Cura\ "$Env:GITHUB_WORKSPACE\packaging\NSIS\Ultimaker-Cura.nsi.jinja" "Ultimaker Cura" "Ultimaker-Cura.exe" "${{ needs.get-semver.outputs.semver_major }}" "${{ needs.get-semver.outputs.semver_minor }}" "${{ needs.get-semver.outputs.semver_patch }}" "0" "Ultimaker B.V." "https://ultimaker.com" "$Env:GITHUB_WORKSPACE\packaging\cura_license.txt" "LZMA" "$Env:GITHUB_WORKSPACE\packaging\cura_banner_nsis.bmp" "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.exe"
                 makensis /V2 /P4 Ultimaker-Cura.nsi
             working-directory: cmake-build-release/cura/dist
 
@@ -235,7 +235,7 @@ jobs:
         -   name: Upload the artifacts
             uses: actions/upload-artifact@v3
             with:
-                name: Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}
+                name: Ultimaker-Cura-${{ runner.os }}-${{ runner.arch }}
                 path: |
                     cmake-build-release/cura/dist/*.tar.gz
                     cmake-build-release/cura/dist/*.zip
