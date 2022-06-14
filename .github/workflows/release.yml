@@ -226,6 +226,12 @@ jobs:
             appimagetool --appimage-extract-and-run Ultimaker-Cura/ "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.AppImage"
         working-directory: cmake-build-release/cura/dist
 
+    -   name: Create the MacOS dmg (bash)
+        if: ${{ github.event.inputs.installer == 'true' && runner.os == 'macOS' }}
+        run: |
+            echo "Not yet implemented"
+        working-directory: cmake-build-release/cura/dist
+
         -   name: Upload the artifacts
             uses: actions/upload-artifact@v3
             with:
