@@ -164,6 +164,7 @@ jobs:
 
         -   name: Create the Cura dist Conan
             run: pyinstaller Ultimaker-Cura.spec
+            working-directory: cmake-build-release/cura
 
         -   name: Archive artifacts
             uses: actions/upload-artifact@v3
