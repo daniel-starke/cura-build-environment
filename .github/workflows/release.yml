@@ -212,6 +212,20 @@ jobs:
                 makensis /V2 /P4 Ultimaker-Cura.nsi
             working-directory: cmake-build-release/cura/dist
 
+    -   name: Create the Linux AppImage (bash)
+        if: ${{ github.event.inputs.installer == 'true' && runner.os == 'Linux' }}
+        run: |
+            cp "$GITHUB_WORKSPACE/packaging/cura.desktop" Ultimaker-Cura/            
+            echo "X-AppImage-Version=${{ needs.get-semver.outputs.semver_full }}" >> Ultimaker-Cura/cura.desktop
+            
+            cp "$GITHUB_WORKSPACE/packaging/cura-icon_256x256.png" Ultimaker-Cura/cura-icon.png
+            cp "$GITHUB_WORKSPACE/packaging/cura.appdata.xml" Ultimaker-Cura/
+            cp "$GITHUB_WORKSPACE/packaging/AppRun" Ultimaker-Cura/
+            chmod 750 Ultimaker-Cura/AppRun
+            
+            appimagetool --appimage-extract-and-run Ultimaker-Cura/ "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.AppImage"
+        working-directory: cmake-build-release/cura/dist
+
         -   name: Upload the artifacts
             uses: actions/upload-artifact@v3
             with:
