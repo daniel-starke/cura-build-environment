@@ -170,5 +170,5 @@ jobs:
             uses: actions/upload-artifact@v3
             with:
                 name: Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}
-                path: cura/dist/Ultimaker-Cura/**
+                path: cmake-build-release/cura/dist/Ultimaker-Cura/**
                 retention-days: 2
