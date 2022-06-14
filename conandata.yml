@@ -23,7 +23,7 @@
     charon:
       url: "https://github.com/ultimaker/libcharon.git"
       branch: "CURA-9365_fix_building_cura_main"
-      directory: "charon"
+      directory: "lbcharon"
       private: False
 "5.1.0-CURA-9365":
   git:
