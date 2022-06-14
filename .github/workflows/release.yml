@@ -81,7 +81,7 @@ jobs:
             run: |
                 if [ "${{ github.event.schedule != '25 5 * * 1-5' }}" == "true" ]; then
                     long_pre_release_tag=${{ steps.git-tool.outputs.PreReleaseTag }}
-                    pre_release_tag=${pre_release_tag:0:9}
+                    pre_release_tag=${long_pre_release_tag:0:9}
                 else
                     pre_release_tag="nightly"
                 fi
