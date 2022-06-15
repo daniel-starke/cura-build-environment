@@ -283,7 +283,7 @@ jobs:
         name: Slack Notification
         if: ${{ always() }}
 
-        needs: [ get-semver, cura-installer-create ]
+        needs: [ cura-installer-create ]
 
         runs-on: ubuntu-latest
 
