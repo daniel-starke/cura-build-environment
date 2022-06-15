@@ -24,13 +24,13 @@ on:
                 default: false
                 type: boolean
 
-# Run the nightly at 5:25 UTC on working days
+    # Run the nightly at 5:25 UTC on working days
     schedule:
-    - cron: '25 5 * * 1-5'
+    -   cron: '25 5 * * 1-5'
 
 env:
-    CONAN_USER: ${{ secrets.CONAN_USER }}
-    CONAN_PASS: ${{ secrets.CONAN_PASS }}
+    CONAN_LOGIN_USERNAME_ULTIMAKER: ${{ secrets.CONAN_USER }}
+    CONAN_PASSWORD_ULTIMAKER: ${{ secrets.CONAN_PASS }}
     GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
     GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
     CODESIGN_IDENTITY: ${{ secrets.CODESIGN_IDENTITY }}
@@ -99,6 +99,11 @@ jobs:
 
         env:
             CURA_VERSION: ${{ needs.get-semver.outputs.semver_full }}
+            CURA_BASEFILE_NAME: "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}"
+            CONAN_TRACE_FILE: ${{ env.GITHUB_WORKSPACE }}/conan_trace.log
+            CONAN_LOG_RUN_TO_FILE: 1
+            CONAN_LOGGING_LEVEL: info
+            BUILD_INFO_PATH: ${{ env.GITHUB_WORKSPACE }}/cmake-build-release/cura/dist/build_info/
 
         steps:
         -   name: Checkout cura-build-environment
@@ -145,14 +150,6 @@ jobs:
                 conan config install https://github.com/Ultimaker/conan-config.git -a "-b ${{ github.event.inputs.conan_config }}"
                 conan profile new default --detect
 
-        -   name: Set the JFrog Artifactory user (bash)
-            if: ${{ runner.os != 'Windows' }}
-            run: conan user -p $CONAN_PASS -r ultimaker $CONAN_USER
-
-        -   name: Set the JFrog Artifactory user (Powershell)
-            if: ${{ runner.os == 'Windows' }}
-            run: conan user -p $Env:CONAN_PASS -r ultimaker $Env:CONAN_USER
-
         -   name: Prepare cura-build-environment
             run: |
                 conan install . -pr:b cura_build.jinja -pr:h cura_release.jinja --build=missing --update -g GitHubActionsBuildEnv -g GitHubActionsRunEnv
@@ -197,22 +194,38 @@ jobs:
             run: pyinstaller Ultimaker-Cura.spec
             working-directory: cmake-build-release/cura
 
+        -   name: Collect build info
+            run: |
+                mkdir build_info
+                cp conan.lock ${{ env.BUILD_INFO_PATH }
+                cp conan_imports_manifest.txt ${{ env.BUILD_INFO_PATH }
+                cp conanbuildinfo.txt ${{ env.BUILD_INFO_PATH }}
+                cp conaninfo.txt ${{ env.BUILD_INFO_PATH }}
+                cp graph_info.json ${{ env.BUILD_INFO_PATH }}
+                cp ${{ env.CONAN_TRACE_FILE }} ${{ env.BUILD_INFO_PATH }}
+            working-directory: cmake-build-release/cura
+
         -   name: Archive the artifacts (bash)
             if: ${{ github.event.inputs.installer == 'false' && runner.os != 'Windows' }}
-            run: tar -zcf "./Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.tar.gz" "./Ultimaker-Cura/"
+            run: |
+                tar -zcf "./$CURA_BASEFILE_NAME.tar.gz" "./Ultimaker-Cura/"
+                echo "CURA_ARTIFACT_FILENAME=$CURA_BASEFILE_NAME.tar.gz" >> $GITHUB_ENV
             working-directory: cmake-build-release/cura/dist
 
         -   name: Archive the artifacts (Powershell)
             if: ${{ github.event.inputs.installer == 'false' && runner.os == 'Windows' }}
-            run: Compress-Archive -Path ".\Ultimaker-Cura" -DestinationPath ".\Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.zip"
+            run: |
+                Compress-Archive -Path ".\Ultimaker-Cura" -DestinationPath ".\$Env:CURA_BASEFILE_NAME.zip"
+                echo "CURA_ARTIFACT_FILENAME=$CURA_BASEFILE_NAME.zip" >> $GITHUB_ENV
             working-directory: cmake-build-release/cura/dist
 
         -   name: Create the Windows exe installer (Powershell)
             if: ${{ github.event.inputs.installer == 'true' && runner.os == 'Windows' }}
             run: |
                 Copy-Item "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" -Destination .\Ultimaker-Cura\
-                python "$Env:GITHUB_WORKSPACE\packaging\NSIS\nsis-configurator.py" .\Ultimaker-Cura\ "$Env:GITHUB_WORKSPACE\packaging\NSIS\Ultimaker-Cura.nsi.jinja" "Ultimaker Cura" "Ultimaker-Cura.exe" "${{ needs.get-semver.outputs.semver_major }}" "${{ needs.get-semver.outputs.semver_minor }}" "${{ needs.get-semver.outputs.semver_patch }}" "0" "Ultimaker B.V." "https://ultimaker.com" "$Env:GITHUB_WORKSPACE\packaging\cura_license.txt" "LZMA" "$Env:GITHUB_WORKSPACE\packaging\cura_banner_nsis.bmp" "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.exe"
+                python "$Env:GITHUB_WORKSPACE\packaging\NSIS\nsis-configurator.py" .\Ultimaker-Cura\ "$Env:GITHUB_WORKSPACE\packaging\NSIS\Ultimaker-Cura.nsi.jinja" "Ultimaker Cura" "Ultimaker-Cura.exe" "${{ needs.get-semver.outputs.semver_major }}" "${{ needs.get-semver.outputs.semver_minor }}" "${{ needs.get-semver.outputs.semver_patch }}" "0" "Ultimaker B.V." "https://ultimaker.com" "$Env:GITHUB_WORKSPACE\packaging\cura_license.txt" "LZMA" "$Env:GITHUB_WORKSPACE\packaging\cura_banner_nsis.bmp" "$Env:GITHUB_WORKSPACE\packaging\Cura.ico" "$Env:CURA_BASEFILE_NAME.exe"
                 makensis /V2 /P4 Ultimaker-Cura.nsi
+                echo "CURA_ARTIFACT_FILENAME=$CURA_BASEFILE_NAME.exe" >> $GITHUB_ENV
             working-directory: cmake-build-release/cura/dist
 
         -   name: Create the Linux AppImage (bash)
@@ -226,16 +239,19 @@ jobs:
                 cp "$GITHUB_WORKSPACE/packaging/AppRun" Ultimaker-Cura/
                 chmod 750 Ultimaker-Cura/AppRun
                 
-                $GITHUB_WORKSPACE/appimagetool --appimage-extract-and-run Ultimaker-Cura/ "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}.AppImage"
+                $GITHUB_WORKSPACE/appimagetool --appimage-extract-and-run Ultimaker-Cura/ "$CURA_BASEFILE_NAME.AppImage"
+                echo "CURA_ARTIFACT_FILENAME=$CURA_BASEFILE_NAME.AppImage" >> $GITHUB_ENV
             working-directory: cmake-build-release/cura/dist
 
         -   name: Create the MacOS dmg (bash)
             if: ${{ github.event.inputs.installer == 'true' && runner.os == 'macOS' }}
             run: |
                 echo "Not yet implemented"
+                echo "CURA_ARTIFACT_FILENAME=$CURA_BASEFILE_NAME.dmg" >> $GITHUB_ENV
             working-directory: cmake-build-release/cura/dist
 
         -   name: Upload the artifacts
+            if: ${{ success() }}
             uses: actions/upload-artifact@v3
             with:
                 name: Ultimaker-Cura-${{ runner.os }}-${{ runner.arch }}
@@ -246,4 +262,37 @@ jobs:
                     cmake-build-release/cura/dist/*.msi
                     cmake-build-release/cura/dist/*.dmg
                     cmake-build-release/cura/dist/*.AppImage
+                    cmake-build-release/cura/dist/build_info/*
+                if-no-files-found: error
                 retention-days: 2
+
+        -   name: Upload the debug artifacts
+            if: ${{ failure() }}
+            uses: actions/upload-artifact@v3
+            with:
+                name: Debug-information-${{ runner.os }}-${{ runner.arch }}
+                path: cmake-build-release/cura/dist/build_info/*
+                if-no-files-found: error
+                retention-days: 2
+
+        -   name: Slack notify on-success
+            if: ${{ success() }}
+            uses: rtCamp/action-slack-notify@v2
+            env:
+                SLACK_USERNAME: ${{ github.repository }}
+                SLACK_COLOR: ${{ job.status }}
+                SLACK_ICON: https://github.com/Ultimaker/Cura/blob/main/icons/cura-128.png?raw=true
+                SLACK_TITLE: Cura has been build successfully
+                SLACK_MESSAGE: The GitHub Action ${{ runner.name }} for ${{ github.repository }} succeeded for ${{ runner.os }}-${{ runner.arch }}. Creating artifact ${{ env.CURA_ARTIFACT_FILENAME }}.
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+        -   name: Slack notify on-failure
+            if: ${{ failure() }}
+            uses: rtCamp/action-slack-notify@v2
+            env:
+                SLACK_USERNAME: ${{ github.repository }}
+                SLACK_COLOR: ${{ job.status }}
+                SLACK_ICON: https://github.com/Ultimaker/Cura/blob/main/icons/cura-128.png?raw=true
+                SLACK_TITLE: Cura failed to be build
+                SLACK_MESSAGE: The GitHub Action ${{ runner.name }} for ${{ github.repository }} failed for ${{ runner.os }}-${{ runner.arch }}. No Artifacts were created, debug information can still be downloaded.
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
