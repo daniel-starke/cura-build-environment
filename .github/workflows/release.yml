@@ -200,7 +200,7 @@ jobs:
 
         -   name: Collect build info
             run: |
-                mkdir build_info
+                mkdir -p ${{ env.BUILD_INFO_PATH }}
                 cp conan.lock ${{ env.BUILD_INFO_PATH }}
                 cp conan_imports_manifest.txt ${{ env.BUILD_INFO_PATH }}
                 cp conanbuildinfo.txt ${{ env.BUILD_INFO_PATH }}
