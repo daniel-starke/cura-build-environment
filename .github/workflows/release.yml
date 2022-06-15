@@ -99,7 +99,7 @@ jobs:
 
         env:
             CURA_VERSION: ${{ needs.get-semver.outputs.semver_full }}
-            CURA_BASEFILE_NAME: "Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}"
+            CURA_BASEFILE_NAME: Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}
             CONAN_TRACE_FILE: ${{ env.GITHUB_WORKSPACE }}/conan_trace.log
             CONAN_LOG_RUN_TO_FILE: 1
             CONAN_LOGGING_LEVEL: info
