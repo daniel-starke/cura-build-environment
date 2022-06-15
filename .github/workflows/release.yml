@@ -99,7 +99,6 @@ jobs:
 
         env:
             CURA_VERSION: ${{ needs.get-semver.outputs.semver_full }}
-            CONAN_TRACE_FILE: ${{ env.GITHUB_WORKSPACE }}/conan_trace.log
             CONAN_LOG_RUN_TO_FILE: 1
             CONAN_LOGGING_LEVEL: info
             BUILD_INFO_PATH: ${{ env.GITHUB_WORKSPACE }}/cmake-build-release/cura/dist/build_info/
@@ -108,8 +107,10 @@ jobs:
         -   name: Checkout cura-build-environment
             uses: actions/checkout@v3
 
-        -   name: Add runner information to file name
-            run: echo "CURA_BASEFILE_NAME=Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}" >> ${{ env.GITHUB_ENV }}
+        -   name: Set runner specific environment variables
+            run: |
+                echo "CURA_BASEFILE_NAME=Ultimaker-Cura-${{ needs.get-semver.outputs.semver_full }}-${{ runner.os }}-${{ runner.arch }}" >> ${{ env.GITHUB_ENV }}
+                echo "CONAN_TRACE_FILE=${{ env.GITHUB_WORKSPACE }}/conan_trace.log" >> ${{ env.GITHUB_ENV }}
 
         -   name: Setup Python and pip
             uses: actions/setup-python@v3
