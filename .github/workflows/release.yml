@@ -293,7 +293,7 @@ jobs:
             uses: rtCamp/action-slack-notify@v2
             env:
                 SLACK_USERNAME: ${{ github.repository }}
-                SLACK_COLOR: ${{ job.status }}
+                SLACK_COLOR: ${{ needs.*.result }}
                 SLACK_ICON: https://github.com/Ultimaker/Cura/blob/main/icons/cura-128.png?raw=true
                 SLACK_TITLE: Cura has been build successfully
                 SLACK_MESSAGE: The GitHub Action for ${{ github.repository }} succeeded for. Creating artifact.
@@ -304,7 +304,7 @@ jobs:
             uses: rtCamp/action-slack-notify@v2
             env:
                 SLACK_USERNAME: ${{ github.repository }}
-                SLACK_COLOR: ${{ job.status }}
+                SLACK_COLOR: ${{ needs.*.result }}
                 SLACK_ICON: https://github.com/Ultimaker/Cura/blob/main/icons/cura-128.png?raw=true
                 SLACK_TITLE: Cura failed to be build
                 SLACK_MESSAGE: The GitHub Action for ${{ github.repository }} failed for. Build and debug info are still stored.
