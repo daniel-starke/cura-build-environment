@@ -9,7 +9,7 @@ include(${CMAKE_BINARY_DIR}/conan.cmake)
 
 # === Project specific ===
 
-conan_config_install(ITEM https://github.com/ultimaker/conan-config.git TYPE git VERIFY_SSL True)
+conan_config_install(ITEM https://github.com/daniel-starke/cura-conan-config TYPE git VERIFY_SSL True)
 conan_check(VERSION 1.46.0 REQUIRED)
 
 conan_cmake_run(

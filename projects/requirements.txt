@@ -1,15 +1,3 @@
-
-cython==0.29.26 \
-    --hash=sha256:af377d543a762867da11fcf6e558f7a4a535ff8693f30cce123fab10c00fa312 \
-    --hash=sha256:f5e15ff892c8afad64931ee3dd723c4755c2c516606f9aae7613bebfac62b0f6 \
-    --hash=sha256:2b834ff6e4d10ba6d7a0d676dd71c1b427a181ddbbbbf79e91d1861557aab59f \
-    --hash=sha256:c813799d533194b7d85203d881d8b4f567a8c644a67f50d47f1ffbf316df412f \
-    --hash=sha256:6773cce9d4b3b6168d8feb2b6f06b658ef1e11cbfec075041745666d8e2a5e45 \
-    --hash=sha256:362fbb9cb4627c7786231429768b54aaba5459a2a0e46c25e59f202ca6155437
-pybind11==2.6.2 \
-    --hash=sha256:2d8aebe1709bc367e34e3b23d8eccbf3f387ee9d5640548c6260d33b59f02405 \
-    --hash=sha256:d0e0aed9279656f21501243b707eb6e3b951e89e10c3271dedf3ae41c365e5ed
-
 # pytest
 pytest==5.2.1 \
     --hash=sha256:7e4800063ccfc306a53c461442526c5571e1462f61583506ce97e4da6a1d88c8 \
@@ -122,6 +110,7 @@ cffi==1.15.0 \
     --hash=sha256:00c878c90cb53ccfaae6b8bc18ad05d2036553e6d9d1d9dbcf323bbe83854ca3 \
     --hash=sha256:0104fb5ae2391d46a4cb082abdd5c69ea4eab79d8d44eaaf79f1b1fd806ee4c2
 pycparser==2.20 \
+    --hash=sha256:2d475327684562c3a96cc71adf7dc8c4f0565175cf86b6d7a404ff4c771f15f0 \
     --hash=sha256:7582ad22678f0fcd81102833f60ef8d0e57288b6b5fb00323d101be910e35705
 
 cryptography==3.4.8; \
@@ -130,6 +119,7 @@ sys_platform=="darwin" \
 
 cryptography==3.4.8; \
 sys_platform=="win32" \
+    --hash=sha256:94cc5ed4ceaefcbe5bf38c8fba6a21fc1d365bb8fb826ea1688e3370b2e24a1c \
     --hash=sha256:3520667fda779eb788ea00080124875be18f2d8f0848ec00733c0ec3bb8219fc
 
 cryptography==3.4.8; \
@@ -139,7 +129,8 @@ sys_platform=="linux" \
 toml==0.10.2 \
     --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
     --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
-sip==6.5.1 \
+sip==6.6.2 \
+    --hash=sha256:0e3efac1c5dfd8e525ae57140927df26993e13f58b89d1577c314f4105bfd90d \
     --hash=sha256:204f0240db8999a749d638a987b351861843e69239b811ec3d1881412c3706a6 \
     --hash=sha256:57e5ac40744c0f10a6c53dd45d2ef2c90e52f34a0210d8309e6563a07f914d0d \
     --hash=sha256:13b09357615c2d8bcb23bf21c1637941ac8ff5f28b346c1ccad7efafa57673e9 \
@@ -199,30 +190,19 @@ numpy-stl==2.10.1 \
     --hash=sha256:f6b529b8a8112dfe456d4f7697c7aee0aca62be5a873879306afe4b26fca963c
 pycollada==0.6 \
     --hash=sha256:fcd6f38fd981e350f9ec754d9671834017accd600e967d6d299a6cfdae5ba4f4
-PyQt6-sip==13.2.1 \
+PyQt5-sip==12.8.1 \
+    --hash=sha256:30e944db9abee9cc757aea16906d4198129558533eb7fadbe48c5da2bd18e0bd \
     --hash=sha256:b7bce59900b2e0a04f70246de2ccf79ee7933036b6b9183cf039b62eeae2b858 \
     --hash=sha256:8b52d42e42e6e9f934ac7528cd154ac0210a532bb33fa1edfb4a8bbfb73ff88b \
     --hash=sha256:0314d011633bc697e99f3f9897b484720e81a5f4ba0eaa5f05c5811e2e74ea53 \
     --hash=sha256:226e9e349aa16dc1132f106ca01fa99cf7cb8e59daee29304c2fea5fa33212ec
-PyQt6==6.2.3 \
-    --hash=sha256:a9bfcac198fe4b703706f809bb686c7cef5f60a7c802fc145c6b57929c7a6a34 \
-    --hash=sha256:11c039b07962b29246de2da0912f4f663786185fd74d48daac7a270a43c8d92a \
-    --hash=sha256:8a2f357b86fec8598f52f16d5f93416931017ca1986d5f68679c9565bfc21fff \
-    --hash=sha256:577334c9d4518022a4cb6f9799dfbd1b996167eb31404b5a63d6c43d603e6418
-PyQt6-Qt6==6.2.4 \
-    --hash=sha256:42c37475a50ec7e06e0445ac9ce39465f69a86af407ad9b28b183da178d401ee \
-    --hash=sha256:b68543e5d5a4f5d24c26b517569da3cd30b0fbe75390b841e142c160399b3c0a \
-    --hash=sha256:0aa93581b92e01deaf2dcaad88ed6718996a6d84de59ee88316bcba143f008c9 \
-    --hash=sha256:48bc5b7400d6bca13d8c0a145f82295a6da317952ee1a3f107f1cd7d078c8140
-PyQt6-NetworkAuth==6.2.0 \
-    --hash=sha256:23e730cc0d6b828bec2f92d9fac3607871e6033a8af4620e5d4e3afc13bd6c3c \
-    --hash=sha256:b85ee25b01d6cb38d6141df0052b96de2df7f6e69066eaddb22ae238f56be40b \
-    --hash=sha256:e637781a00dd2032d0fd2025af09274898335033763e1dc765a5a99348f60c3b \
-    --hash=sha256:542e9d9a8a5bb78e1f26fa3d35ee01f45209bcf5a35b0cc367aaa85932c29750
-PyQt6-NetworkAuth-Qt6==6.2.4 \
-    --hash=sha256:c7996a9d8c4ce024529ec37981fbfd525ab1a2d497af1281f81f2b6054452d2e \
-    --hash=sha256:1ae9e08e03bd9d5ebdb42dfaccf484a9cc62eeea7504621fe42c005ff1745e66 \
-    --hash=sha256:8ed4e5e0eaaa42a6f91aba6745eea23fb3ffcbddc6b162016936530ed28dd0ad
+#PyQt5==5.15.2; \
+#    sys_platform=="win32" \
+#    --hash=sha256:29889845688a54d62820585ad5b2e0200a36b304ff3d7a555e95599f110ba4ce \
+#    --hash=sha256:372b08dc9321d1201e4690182697c5e7ffb2e0770e6b4a45519025134b12e4fc \
+#    --hash=sha256:894ca4ae767a8d6cf5903784b71f755073c78cb8c167eecf6e4ed6b3b055ac6a \
+#    --hash=sha256:ea24f24b7679bf393dd2e4f53fe0ce65021be18304c1ff7a226c2fc5c356d0da \
+#    --hash=sha256:faaecb76ec65e12673a968e7f5bc02495957e6996f0a3fa0d98895f9e4113746
 pyserial==3.4 \
     --hash=sha256:6e2d401fdee0eab996cf734e67773a0143b932772ca8b42451440cfed942c627 \
     --hash=sha256:e0770fadba80c31013896c7e6ef703f72e7834965954a78e71a3049488d4d7d8
@@ -306,21 +286,6 @@ zeroconf==0.31.0 \
 ifaddr==0.1.7 \
     --hash=sha256:1f9e8a6ca6f16db5a37d3356f07b6e52344f6f9f7e806d618537731669eb1a94 \
     --hash=sha256:d1f603952f0a71c9ab4e705754511e4e03b02565bc4cec7188ad6415ff534cd3
-
-# Use Numpy wheel that is compiled with Intel optimizations (MKL). Obtained from https://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy
-# We cache this at software.ultimaker.com since this website tends to remove older versions rather quickly.
-https://software.ultimaker.com/cura-binary-dependencies/numpy-1.21.5+mkl-cp310-cp310-win_amd64.whl; \
-    sys_platform=="win32" \
-    --hash=sha256:fbd5d5126b730a151134d21994a951fe28df06464e0c9a2cba2a4132e542a5fc
-
-numpy==1.21.5; \
-    sys_platform!="win32" \
-    --hash=sha256:301e408a052fdcda5cdcf03021ebafc3c6ea093021bf9d1aa47c54d48bdad166 \
-    --hash=sha256:a7e8f6216f180f3fd4efb73de5d1eaefb5f5a1ee5b645c67333033e39440e63a \
-    --hash=sha256:fc7a7d7b0ed72589fd8b8486b9b42a564f10b8762be8bd4d9df94b807af4a089 \
-    --hash=sha256:58ca1d7c8aef6e996112d0ce873ac9dfa1eaf4a1196b4ff7ff73880a09923ba7 \
-    --hash=sha256:dc4b2fb01f1b4ddbe2453468ea0719f4dbb1f5caa712c8b21bb3dd1480cd30d9 \
-    --hash=sha256:6a5928bc6241264dce5ed509e66f33676fc97f464e7a919edc672fb5532221ee
 
 scipy==1.8.0rc2; \
     --hash=sha256:d73b13eb0452c178f946b4db60b27e400225df02e926609652ed67798054e77d \
